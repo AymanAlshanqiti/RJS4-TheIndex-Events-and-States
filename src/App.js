@@ -10,7 +10,8 @@ import AuthorDetail from "./AuthorDetail";
 
 class App extends Component {
   state = {
-    currentAuthor: null
+    currentAuthor: null,
+    filterAuthors: authors
   };
 
   // Changing Current Author To Presint His/Her Detail
@@ -21,11 +22,28 @@ class App extends Component {
     this.setState({ currentAuthor: null });
   };
 
+  filterAuthors = query => {
+    this.setState({
+      filterAuthors: authors.filter(author => {
+        const authorName = `${author.first_name} ${
+          author.last_name
+        }`.toLowerCase();
+        return authorName.includes(query.toLowerCase());
+      })
+    });
+  };
+
   getView = () => {
     if (this.state.currentAuthor) {
       return <AuthorDetail author={this.state.currentAuthor} />;
     } else {
-      return <AuthorsList authors={authors} selectAuthor={this.selectAuthor} />;
+      return (
+        <AuthorsList
+          authors={this.state.filterAuthors}
+          selectAuthor={this.selectAuthor}
+          filterAuthors={this.filterAuthors}
+        />
+      );
     }
   };
 
